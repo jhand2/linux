@@ -619,6 +619,8 @@ static void software_node_release(struct kobject *kobj)
 		property_entries_free(swnode->node->properties);
 		kfree(swnode->node);
 	}
+
+	list_del(&kobj->entry);
 	ida_destroy(&swnode->child_ids);
 	kfree(swnode);
 }
@@ -824,9 +826,16 @@ EXPORT_SYMBOL_GPL(fwnode_create_software_node);
 void fwnode_remove_software_node(struct fwnode_handle *fwnode)
 {
 	struct swnode *swnode = to_swnode(fwnode);
+	struct swnode *child = NULL;
 
 	if (!swnode)
 		return;
+
+	while (!list_empty(&swnode->children))
+	{
+		child = list_first_entry_or_null(&swnode->children, struct swnode, entry);
+		fwnode_remove_software_node(&child->fwnode);
+	}
 
 	kobject_put(&swnode->kobj);
 }
