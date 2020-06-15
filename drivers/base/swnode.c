@@ -450,7 +450,7 @@ software_node_get_next_child(const struct fwnode_handle *fwnode,
 		c = list_next_entry(c, entry);
 	else
 		c = list_first_entry(&p->children, struct swnode, entry);
-	return &c->fwnode;
+	return fwnode_handle_get(&c->fwnode);
 }
 
 static struct fwnode_handle *
@@ -465,8 +465,7 @@ software_node_get_named_child_node(const struct fwnode_handle *fwnode,
 
 	list_for_each_entry(child, &swnode->children, entry) {
 		if (!strcmp(childname, kobject_name(&child->kobj))) {
-			kobject_get(&child->kobj);
-			return &child->fwnode;
+			return fwnode_handle_get(&child->fwnode);
 		}
 	}
 	return NULL;
