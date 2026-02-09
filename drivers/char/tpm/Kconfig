@@ -254,5 +254,14 @@ config TCG_SVSM
 	  level (usually VMPL0).  To compile this driver as a module, choose M
 	  here; the module will be called tpm_svsm.
 
+config TCG_EVENTLOG_ONLY
+	tristate "TPM 2.0 Eventlog Only"
+	depends on ACPI
+	help
+	  If you have a TPM security chip with a non-standard interface
+	  not supported by Linux and described by ACPI, say Yes and Linux will
+	  still expose the TPM 2.0 eventlog. To compile this driver as a module,
+	  choose M here; the module will be called tpm_eventlog_only.
+
 source "drivers/char/tpm/st33zp24/Kconfig"
 endif # TCG_TPM
